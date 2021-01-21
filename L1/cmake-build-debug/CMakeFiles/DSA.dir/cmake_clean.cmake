@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/DSA.dir/main.cpp.o"
+  "CMakeFiles/DSA.dir/insertion_sort.cpp.o"
   "DSA"
   "DSA.pdb"
 )

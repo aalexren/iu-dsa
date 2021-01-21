@@ -123,32 +123,32 @@ DSA/fast:
 	$(MAKE) -f CMakeFiles/DSA.dir/build.make CMakeFiles/DSA.dir/build
 .PHONY : DSA/fast
 
-main.o: main.cpp.o
+insertion_sort.o: insertion_sort.cpp.o
 
-.PHONY : main.o
+.PHONY : insertion_sort.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/DSA.dir/build.make CMakeFiles/DSA.dir/main.cpp.o
-.PHONY : main.cpp.o
+insertion_sort.cpp.o:
+	$(MAKE) -f CMakeFiles/DSA.dir/build.make CMakeFiles/DSA.dir/insertion_sort.cpp.o
+.PHONY : insertion_sort.cpp.o
 
-main.i: main.cpp.i
+insertion_sort.i: insertion_sort.cpp.i
 
-.PHONY : main.i
+.PHONY : insertion_sort.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/DSA.dir/build.make CMakeFiles/DSA.dir/main.cpp.i
-.PHONY : main.cpp.i
+insertion_sort.cpp.i:
+	$(MAKE) -f CMakeFiles/DSA.dir/build.make CMakeFiles/DSA.dir/insertion_sort.cpp.i
+.PHONY : insertion_sort.cpp.i
 
-main.s: main.cpp.s
+insertion_sort.s: insertion_sort.cpp.s
 
-.PHONY : main.s
+.PHONY : insertion_sort.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/DSA.dir/build.make CMakeFiles/DSA.dir/main.cpp.s
-.PHONY : main.cpp.s
+insertion_sort.cpp.s:
+	$(MAKE) -f CMakeFiles/DSA.dir/build.make CMakeFiles/DSA.dir/insertion_sort.cpp.s
+.PHONY : insertion_sort.cpp.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... DSA"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... insertion_sort.o"
+	@echo "... insertion_sort.i"
+	@echo "... insertion_sort.s"
 .PHONY : help
 
 

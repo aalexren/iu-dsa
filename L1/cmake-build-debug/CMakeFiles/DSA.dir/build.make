@@ -57,27 +57,27 @@ include CMakeFiles/DSA.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/DSA.dir/flags.make
 
-CMakeFiles/DSA.dir/main.cpp.o: CMakeFiles/DSA.dir/flags.make
-CMakeFiles/DSA.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kot_mapku3/Developer/S21/DSA/L1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/DSA.dir/main.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/DSA.dir/main.cpp.o -c /Users/kot_mapku3/Developer/S21/DSA/L1/main.cpp
+CMakeFiles/DSA.dir/insertion_sort.cpp.o: CMakeFiles/DSA.dir/flags.make
+CMakeFiles/DSA.dir/insertion_sort.cpp.o: ../insertion_sort.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kot_mapku3/Developer/S21/DSA/L1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/DSA.dir/insertion_sort.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/DSA.dir/insertion_sort.cpp.o -c /Users/kot_mapku3/Developer/S21/DSA/L1/insertion_sort.cpp
 
-CMakeFiles/DSA.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/DSA.dir/main.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kot_mapku3/Developer/S21/DSA/L1/main.cpp > CMakeFiles/DSA.dir/main.cpp.i
+CMakeFiles/DSA.dir/insertion_sort.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/DSA.dir/insertion_sort.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kot_mapku3/Developer/S21/DSA/L1/insertion_sort.cpp > CMakeFiles/DSA.dir/insertion_sort.cpp.i
 
-CMakeFiles/DSA.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/DSA.dir/main.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kot_mapku3/Developer/S21/DSA/L1/main.cpp -o CMakeFiles/DSA.dir/main.cpp.s
+CMakeFiles/DSA.dir/insertion_sort.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/DSA.dir/insertion_sort.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kot_mapku3/Developer/S21/DSA/L1/insertion_sort.cpp -o CMakeFiles/DSA.dir/insertion_sort.cpp.s
 
 # Object files for target DSA
 DSA_OBJECTS = \
-"CMakeFiles/DSA.dir/main.cpp.o"
+"CMakeFiles/DSA.dir/insertion_sort.cpp.o"
 
 # External object files for target DSA
 DSA_EXTERNAL_OBJECTS =
 
-DSA: CMakeFiles/DSA.dir/main.cpp.o
+DSA: CMakeFiles/DSA.dir/insertion_sort.cpp.o
 DSA: CMakeFiles/DSA.dir/build.make
 DSA: CMakeFiles/DSA.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/kot_mapku3/Developer/S21/DSA/L1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable DSA"

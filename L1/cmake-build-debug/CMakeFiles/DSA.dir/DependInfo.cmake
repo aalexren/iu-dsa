@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/kot_mapku3/Developer/S21/DSA/L1/main.cpp" "/Users/kot_mapku3/Developer/S21/DSA/L1/cmake-build-debug/CMakeFiles/DSA.dir/main.cpp.o"
+  "/Users/kot_mapku3/Developer/S21/DSA/L1/insertion_sort.cpp" "/Users/kot_mapku3/Developer/S21/DSA/L1/cmake-build-debug/CMakeFiles/DSA.dir/insertion_sort.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 

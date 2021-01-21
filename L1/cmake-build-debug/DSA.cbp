@@ -80,7 +80,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/kot_mapku3/Developer/S21/DSA/L1/main.cpp">
+		<Unit filename="/Users/kot_mapku3/Developer/S21/DSA/L1/insertion_sort.cpp">
 			<Option target="DSA"/>
 		</Unit>
 		<Unit filename="/Users/kot_mapku3/Developer/S21/DSA/L1/CMakeLists.txt">
