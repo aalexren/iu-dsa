@@ -169,59 +169,6 @@ public:
 
    List<T> searchRange(double from, double to) {
       List<T> list;
-//      size_t lb = 0, ub = _last; // lower_bound, upper_bound
-//      size_t si, fi; // start index, finish index
-//
-//      while (true) {
-//         size_t mid = (lb + ub) / 2;
-//
-//         if (lb == mid) {
-//            if (_array[mid].first >= from) {
-//               si = mid;
-//               break; // mid
-//            }
-//         }
-//
-//         if (_array[mid].first < from) {
-//            lb = mid + 1;
-//            if (lb > ub) {
-//               si = mid + 1;
-//               break; // mid + 1
-//            }
-//         } else if (lb > ub) {
-//            si = mid;
-//            break; // mid
-//         } else {
-//            ub = mid - 1;
-//         }
-//      }
-//
-//      lb = 0, ub = _last;
-//      while (true) {
-//         size_t mid = (lb + ub) / 2;
-//
-//         if (lb == mid) {
-//            if (_array[mid].first >= to) {
-//               fi = mid;
-//               break; // mid
-//            }
-//         }
-//
-//         if (_array[mid].first < to) {
-//            lb = mid + 1;
-//            if (lb > ub) {
-//               fi = mid + 1;
-//               break; // mid + 1
-//            }
-//         } else if (lb > ub) {
-//            fi = mid;
-//            break; // mid
-//         } else {
-//            ub = mid - 1;
-//         }
-//      }
-
-//      for (size_t i = si; i < fi; ++i) {
       for (size_t i = 0; i < size(); ++i) {
          if (_array[i].first >= from && _array[i].first <= to) {
             list.push(_array[i]);
@@ -232,7 +179,6 @@ public:
    }
 
    List<T> searchRange(T from, T to) override {
-//      ArraySortedList<T> list;
    }
 
    // return number of element actually added to the list
@@ -260,35 +206,6 @@ private:
       _array = _p_temp;
       _size = _size * factor;
    }
-
-   // binary search for finding index where to put in
-//   size_t _index_to_insert(T item) {
-//      size_t l = 0, r = _last, mid = (l + r) / 2;
-//
-//      while (true) {
-//
-//         if (l == mid) {
-//            if (_array[mid] > item) {
-//               return mid; // first cell
-//            }
-//         }
-//
-//         if (_array[mid] < item) {
-//            l = mid + 1; // in upper half
-//            if (l > r) {
-//               return mid + 1;
-//            }
-//         }
-//         else if (l > r) {
-//            return mid; // last cell
-//         }
-//         else {
-//            r = mid - 1; // in lower half
-//         }
-//
-//         mid = (l + r) / 2;
-//      }
-//   }
 
    size_t _index_to_insert(pair<double, string> item) {
       size_t l = 0, r = _last, mid = (l + r) / 2;
@@ -417,49 +334,6 @@ void pawn_shop_items() {
 
 int main() {
    pawn_shop_items();
-//   ArraySortedList<pair<double, string>> list;
-//   for (int i = 0; i < 20; ++i) {
-//      list.add(make_pair(double(i), "keks"));
-////      list.remove(list.indexOf(make_pair(double((i-1)*2), "keks")));
-//   }
-//   for (int i = 0; i < 20; ++i) {
-////      list.add(make_pair(double(i), "keks"));
-//      list.remove(list.indexOf(make_pair(double((i-1)*2), "keks")));
-//   }
-//   list.searchRange(0.0, 10000.0).display();
-
-
-//   pair<double, string> pp(make_pair(100.02, "Watch"));
-//   pair<double, string> pw(make_pair(150.31, "Kettle"));
-//   list.add(pp);
-//   list.add(pw);
-//   list.searchRange(101.0, 150.32).display();
-
-
-//   list.add(pp);
-//   list.add(pp);
-//   list.add(pp);
-//   list.add(pp);
-//   ArraySortedList<int> list;
-//   list.add(5);
-//   list.add(8);
-//   list.add(6);
-//   list.add(-1);
-//   list.add(10);
-//   list.add(4);
-////   for (int i = 0; i < list.size(); ++i) {
-////      cout << list.get(i) << endl;
-////      cout << "size: " << list.size() << endl;
-////   }
-//
-//
-//   list.remove(5);
-
-
-//   for (int i = 0; i < list.size(); ++i) {
-//      cout << list.get(i).first << endl;
-//      cout << "size: " << list.size() << endl;
-//   }
 
    return 0;
 }
