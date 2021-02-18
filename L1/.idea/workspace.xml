@@ -11,7 +11,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="51749b2f-3866-4e60-9bb8-295fd446c154" name="Default Changelist" comment="" />
+    <list default="true" id="51749b2f-3866-4e60-9bb8-295fd446c154" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,7 +23,11 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1nNMcYnj27LLw64dGxqOa3vgw5d" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -54,7 +60,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1611226174418</updated>
-      <workItem from="1611226177242" duration="1804000" />
+      <workItem from="1611226177242" duration="2058000" />
+      <workItem from="1611569571571" duration="595000" />
     </task>
     <servers />
   </component>
@@ -62,22 +69,22 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1398" height="224" key="GridCell.Tab.0.bottom" timestamp="1611242153473">
+    <state width="1398" height="223" key="GridCell.Tab.0.bottom" timestamp="1611242888582">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.bottom/0.25.1440.875@0.25.1440.875" timestamp="1611242153473" />
-    <state width="1398" height="224" key="GridCell.Tab.0.center" timestamp="1611242153471">
+    <state width="1398" height="223" key="GridCell.Tab.0.bottom/0.25.1440.875@0.25.1440.875" timestamp="1611242888582" />
+    <state width="1398" height="223" key="GridCell.Tab.0.center" timestamp="1611242888580">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.center/0.25.1440.875@0.25.1440.875" timestamp="1611242153471" />
-    <state width="1398" height="224" key="GridCell.Tab.0.left" timestamp="1611242153470">
+    <state width="1398" height="223" key="GridCell.Tab.0.center/0.25.1440.875@0.25.1440.875" timestamp="1611242888580" />
+    <state width="1398" height="223" key="GridCell.Tab.0.left" timestamp="1611242888580">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.left/0.25.1440.875@0.25.1440.875" timestamp="1611242153470" />
-    <state width="1398" height="224" key="GridCell.Tab.0.right" timestamp="1611242153472">
+    <state width="1398" height="223" key="GridCell.Tab.0.left/0.25.1440.875@0.25.1440.875" timestamp="1611242888580" />
+    <state width="1398" height="223" key="GridCell.Tab.0.right" timestamp="1611242888581">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="224" key="GridCell.Tab.0.right/0.25.1440.875@0.25.1440.875" timestamp="1611242153472" />
+    <state width="1398" height="223" key="GridCell.Tab.0.right/0.25.1440.875@0.25.1440.875" timestamp="1611242888581" />
     <state x="470" y="312" key="cloudConfig.PluginsDialog" timestamp="1611226223695">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
