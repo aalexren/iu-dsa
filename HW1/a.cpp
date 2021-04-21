@@ -1,6 +1,4 @@
-/*
- * Created by Artem Chernitsa B20-02
- */
+/* -> Created by Artem Chernitsa B20-02 <- */
 
 #include <iostream>
 #include <iomanip>
@@ -22,6 +20,11 @@ public:
    virtual size_t size() = 0;
 };
 
+/*
+ * Simple linked list.
+ * This used to add elements, get elements and display whole list.
+ * Time complexity of push is O(1), get is O(n), display is O(n).
+ */
 template <typename T>
 class List : public IList<T> {
 public:
@@ -102,6 +105,10 @@ public:
    virtual bool isEmpty() = 0; // return whether the list is empty
 };
 
+/*
+ * Implementation of Sorted list ADT using arrays.
+ * Elements sorted in ascending order. For the certain task first values are compared.
+ */
 template <typename T>
 class ArraySortedList : public SortedList<T> {
 public:
@@ -111,7 +118,12 @@ public:
       _last = -1;
    }
 
-   // add element to list keeping order of elements
+   /* add element to list keeping order of elements.
+    * method add the new element in average case for a linear time O(n) - cause we need to shift elements,
+    * in case there is no place for the new element we should expand it:
+    * that takes O(n) time; _index_to_insert() executes for a logarithmic time O(logn),
+    * so worst case whole method gets also linear time.
+    */
    void add(T item) override {
       if (isEmpty()) {
          _initialize(item);
@@ -134,18 +146,30 @@ public:
       _array[mid] = item;
    }
 
+   /*
+    * Time complexity for worst case is O(1).
+    */
    T least() override {
       return _array[0];
    }
 
+   /*
+    * Time complexity for worst case is O(1).
+    */
    T greatest() override {
       return _array[_last];
    }
 
+   /*
+    * Time complexity for worst case is O(1).
+    */
    T get(size_t i) override {
+      // there can be exception out_of_range
+      if (i >= _size) throw out_of_range("out of range");
       return _array[i];
    }
 
+   /* This method works for a linear time in average O(n) */
    size_t indexOf(T item) override {
       for (size_t i = 0; i < size(); ++i) {
          if (_array[i].first < item.first < 0.003 && _array[i].second == item.second) {
@@ -155,6 +179,7 @@ public:
       return -1;
    }
 
+   /* This method works for a linear time in average O(n) */
    void remove(size_t i) override {
       if (i <= _last) {
          for (size_t j = i; j < _last; ++j) {
@@ -167,6 +192,13 @@ public:
       _last--;
    }
 
+   // special overriding for this task
+   /* This method works for a linear time in average O(n):
+    * since there is only one cycle from 0 to end of array,
+    * we watch every element and check if it satisfies the condition,
+    * so it takes O(1) in the best case, O(n) in the worst case,
+    * push method takes constant time, so whole method takes O(n) in average case.
+    */
    List<T> searchRange(double from, double to) {
       List<T> list;
       for (size_t i = 0; i < size(); ++i) {
@@ -178,14 +210,30 @@ public:
       return list;
    }
 
+   // general implementation of searchRange()
+   /* time complexity same as previous one */
    List<T> searchRange(T from, T to) override {
+      List<T> list;
+      for (size_t i = 0; i < size(); ++i) {
+         if (_array[i] >= from && _array[i] <= to) {
+            list.push(_array[i]);
+         }
+      }
+
+      return list;
    }
 
-   // return number of element actually added to the list
+   /*
+    * Return number of element actually added to the list.
+    * Time complexity is O(1).
+    */
    size_t size() override {
       return _last + 1;
    }
 
+   /*
+    * Time complexity is O(1).
+    */
    bool isEmpty() override {
       return _last == -1;
    }
@@ -196,8 +244,11 @@ private:
    T* _array;
 
    // increase size of dynamic array factor times
+   /* This method works for a linear time in average O(n),
+    * since we need to copy all the elements to the new array.
+    */
    void _expand(size_t factor) {
-      T* _p_temp = new T[_size * factor];//[_size * sizeof(T) * factor];
+      T* _p_temp = new T[_size * factor];
 
       for (size_t i = 0; i < _size; ++i) {
          _p_temp[i] = _array[i];
@@ -207,6 +258,10 @@ private:
       _size = _size * factor;
    }
 
+   /*
+    * This method works for a logarithmic time O(logn),
+    * because it uses binary search.
+    */
    size_t _index_to_insert(pair<double, string> item) {
       size_t l = 0, r = _last, mid = (l + r) / 2;
 
@@ -236,7 +291,10 @@ private:
    }
 
 
-   // standard binary search
+   /*
+    * standard binary search
+    * Time complexity is O(logn)
+    */
    size_t _binary_search(T item) {
       size_t l = 0, r = _last, mid = (l + r) / 2;
       while (l <= r) {
@@ -257,6 +315,10 @@ private:
       return mid;
    }
 
+   /*
+    * same binary search, overrided for the certain task
+    * Time complexity is O(logn)
+    */
    template <class K, class V>
    long long int _binary_search(pair<K, V> item) {
       size_t l = 0, r = _last, mid = (l + r) / 2;
@@ -278,6 +340,7 @@ private:
       return -1;
    }
 
+   // time complexity is O(1)
    void _initialize(T item) {
       _size = 1;
       _array = new T[1];
