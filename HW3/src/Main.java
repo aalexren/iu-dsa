@@ -1,6 +1,14 @@
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Collectors;
+
+public class Main {
+
+    public static void main(String[] args) {
+        UserInput userInput = new UserInput();
+
+        userInput.startLoop();
+    }
+}
 
 class Vertex<E> {
     public E name;
@@ -39,16 +47,32 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
 
     public HashMap<Vertex<E>, HashMap<Vertex<E>, Edge<E, V>>> matrix;
 
+    // members to discover cycle in the graph
+    private HashMap<Vertex<E>, Integer> colors;
+    private Vertex<E> cycle_start;
+    private Vertex<E> cycle_end;
+    private ArrayList<Vertex<E>> cycle_path;
+    private HashMap<Vertex<E>, Vertex<E>> parents; // child -> parent
+
     AdjacencyMatrixGraph() {
         matrix = new HashMap<>();
+        colors = new HashMap<>();
+        cycle_start = null;
+        cycle_end = null;
+        cycle_path = null;
+        parents = null;
     }
 
     @Override
     public Vertex<E> addVertex(E value) {
         Vertex<E> v = new Vertex<>(value);
 
-        matrix.put(v, new HashMap<>());
-        return v;
+        if (findVertex(value) == null) {
+            matrix.put(v, new HashMap<>());
+            return v;
+        }
+
+        return null;
     }
 
     @Override
@@ -66,14 +90,18 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
     @Override
     public Edge<E, V> addEdge(Vertex<E> from, Vertex<E> to, V weight) {
         Edge<E, V> e = new Edge<>(from, to, weight);
-        matrix.get(from).put(to, e);
+        if (matrix.get(from) != null) {
+            matrix.get(from).put(to, e);
+        }
 
         return e;
     }
 
     @Override
     public Edge<E, V> removeEdge(Edge<E, V> e) {
-        matrix.get(e.from).remove(e.to);
+        if (matrix.get(e.from) != null) {
+            matrix.get(e.from).remove(e.to);
+        }
 
         return e;
     }
@@ -113,27 +141,101 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
         }
 
         return ret;
-//        return matrix.keySet().stream().filter(v -> v.name == value).findFirst().get();
     }
 
     @Override
     public Edge<E, V> findEdge(E from_value, E to_value) {
-//        Vertex<E> from = matrix.keySet().stream().filter(v -> v.name == from_value).findFirst().get();
-//        Vertex<E> to = matrix.keySet().stream().filter(v -> v.name == to_value).findFirst().get();
         Vertex<E> from = findVertex(from_value);
         Vertex<E> to = findVertex(to_value);
 
-        return matrix.get(from).get(to);
+        return (from != null && to != null) ? matrix.get(from).get(to) : null;
     }
 
     @Override
     public boolean hasEdge(Vertex<E> u, Vertex<E> v) {
-        return matrix.get(u).containsKey(v);
+        return matrix.get(u) != null && matrix.get(u).containsKey(v);
+    }
+
+    public ArrayList<Edge<E, V>> isAcyclic() {
+        // to observe the color of vertex
+        // 0 - not visited
+        // 1 - in progress
+        // 2 - fully visited
+        colors = new HashMap<>();
+        for (Vertex<E> k: matrix.keySet()) {
+            colors.put(k, 0);
+        }
+        cycle_start = null; // abcense of cycle
+        cycle_end = null;
+
+        cycle_path = new ArrayList<>(); // vertices in cycle if exist
+        parents = new HashMap<>();
+        for (Vertex<E> k: matrix.keySet()) {
+            if (DFS(k)) break;
+        }
+
+        if (cycle_start != null) {
+            cycle_path.add(cycle_start);
+            Vertex<E> v = cycle_end;
+            while (v != cycle_start) {
+                cycle_path.add(v);
+                v = parents.get(v);
+            }
+            cycle_path.add(cycle_start);
+
+            Collections.reverse(cycle_path);
+
+            ArrayList<Edge<E, V>> ret = new ArrayList<>();
+            for (int i = 0; i < cycle_path.size() - 1; ++i) {
+                ret.add(matrix.get(cycle_path.get(i)).get(cycle_path.get(i + 1)));
+            }
+            return ret;
+        }
+        else return null;
+    }
+
+    private boolean DFS(Vertex<E> start) {
+        colors.put(start, 1);
+
+        // check all adjacent
+        for (Vertex<E> to: matrix.get(start).keySet()) {
+            if (colors.get(to) == 0) {
+                parents.put(to, start);
+                if (DFS(to)) return true;
+            }
+            if (colors.get(to) == 1) {
+                cycle_start = to;
+                cycle_end = start;
+                return true;
+            }
+        }
+
+        colors.put(start, 2);
+        return false;
+    }
+
+    public void transpose() {
+        HashMap<Vertex<E>, HashMap<Vertex<E>, Edge<E, V>>> ret = new HashMap<>();
+
+        for (Vertex<E> k: matrix.keySet()) {
+            ret.put(k, new HashMap<>());
+        }
+
+        for (Vertex<E> k: matrix.keySet()) {
+            for (Vertex<E> l: matrix.get(k).keySet()) {
+                Edge<E, V> e = matrix.get(k).get(l);
+                Vertex<E> tmp = e.from;
+                e.from = e.to;
+                e.to = tmp;
+                ret.get(l).put(k, e);
+            }
+        }
+
+        matrix = ret;
     }
 }
 
-class UserInput<E, V> {
-//    public AdjacencyMatrixGraph<E, V> graph;
+class UserInput {
     public AdjacencyMatrixGraph<String, Integer> graph;
 
     public UserInput() {
@@ -142,9 +244,11 @@ class UserInput<E, V> {
 
     public void startLoop() {
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+        while (scanner.hasNext()) {
             String[] strs = scanner.nextLine().split(" ");
-            getCommand(strs[0], Arrays.copyOfRange(strs, 1, strs.length));
+            try {
+                getCommand(strs[0], Arrays.copyOfRange(strs, 1, strs.length));
+            } catch (Exception ignored) { }
         }
     }
 
@@ -157,71 +261,71 @@ class UserInput<E, V> {
             case "ADD_EDGE": execAddEdge(args); break;
             case "REMOVE_EDGE": execRemoveEdge(args); break;
             case "HAS_EDGE": ret = execHasEdge(args); break;
+            case "IS_ACYCLIC": ret = execIsAcyclic(args); break;
+            case "TRANSPOSE": execTranspose(args); break;
         }
 
         if (ret != null) System.out.println(ret);
     }
 
     private void execAddVertex(String[] args) {
-//        E name = (E) args[0];
         String name = args[0];
         graph.addVertex(name);
     }
 
     private void execRemoveVertex(String[] args) {
-//        E name = (E) args[0];
         String name = args[0];
-//        Vertex<E> v = graph.findVertex(name);
+
         Vertex<String> v = graph.findVertex(name);
         graph.removeVertex(v);
     }
 
     private void execAddEdge(String[] args) {
-//        E from = (E) args[0];
-//        E to = (E) args[1];
-//        V weight = (V) args[2];
         String from = args[0];
         String to = args[1];
         Integer weight = Integer.parseInt(args[2]);
 
-//        Vertex<E> from_v = graph.findVertex(from);
-//        Vertex<E> to_v = graph.findVertex(to);
         Vertex<String> from_v = graph.findVertex(from);
         Vertex<String> to_v = graph.findVertex(to);
         graph.addEdge(from_v, to_v, weight);
     }
 
     private void execRemoveEdge(String[] args) {
-//        E from = (E) args[0];
-//        E to = (E) args[1];
         String from = args[0];
         String to = args[1];
 
-//        Edge<E, V> e = graph.findEdge(from, to);
         Edge<String, Integer> e = graph.findEdge(from, to);
         graph.removeEdge(e);
     }
 
     private String execHasEdge(String[] args) {
-//        E from = (E) args[0];
-//        E to = (E) args[1];
         String from = args[0];
         String to = args[1];
 
-//        Vertex<E> from_v = graph.findVertex(from);
-//        Vertex<E> to_v = graph.findVertex(to);
         Vertex<String> from_v = graph.findVertex(from);
         Vertex<String> to_v = graph.findVertex(to);
 
         return graph.hasEdge(from_v, to_v) ? "TRUE" : "FALSE";
     }
-}
 
-public class Main {
+    private String execIsAcyclic(String[] args) {
+        ArrayList<Edge<String, Integer>> path = graph.isAcyclic();
+        if (path == null) {
+            return "ACYCLIC";
+        }
+        else {
+            Integer weight = 0;
+            StringBuilder sb = new StringBuilder();
+            for (Edge<String, Integer> e: path) {
+                sb.append(e.from.name).append(" ");
+                weight += e.weight;
+            }
 
-    public static void main(String[] args) {
-        UserInput<String, Integer> userInput = new UserInput<>();
+            return weight.toString().concat(" ".concat(sb.toString().trim()));
+        }
+    }
 
-        userInput.startLoop();
+    private void execTranspose(String[] args) {
+        graph.transpose();
     }
 }
