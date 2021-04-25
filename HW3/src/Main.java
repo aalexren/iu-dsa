@@ -1,12 +1,14 @@
-import java.lang.reflect.Array;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         UserInput userInput = new UserInput();
 
-        userInput.startLoop();
+//        userInput.startLoop();
+        userInput.shortestPath();
     }
 }
 
@@ -26,9 +28,17 @@ class Edge<E, V> {
         this.weight = weight;
     }
 
+    public Edge(Vertex<E> from, Vertex<E> to, V weight, V bandwidth) {
+        this.from = from;
+        this.to = to;
+        this.weight = weight;
+        this.bandwidth = bandwidth;
+    }
+
     public Vertex<E> from;
     public Vertex<E> to;
     public V weight;
+    public V bandwidth;
 }
 
 interface Graph<E, V> {
@@ -54,6 +64,8 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
     private ArrayList<Vertex<E>> cycle_path;
     private HashMap<Vertex<E>, Vertex<E>> parents; // child -> parent
 
+    private HashMap<E, Vertex<E>> findVertexMap; // additional hashmap to make findVertex for O(1)
+
     AdjacencyMatrixGraph() {
         matrix = new HashMap<>();
         colors = new HashMap<>();
@@ -61,6 +73,7 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
         cycle_end = null;
         cycle_path = null;
         parents = null;
+        findVertexMap = new HashMap<>();
     }
 
     @Override
@@ -69,6 +82,7 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
 
         if (findVertex(value) == null) {
             matrix.put(v, new HashMap<>());
+            findVertexMap.put(value, v);
             return v;
         }
 
@@ -78,6 +92,7 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
     @Override
     public Vertex<E> removeVertex(Vertex<E> v) {
         matrix.remove(v);
+        findVertexMap.remove(v.name);
 
         // looking for that vertex like adjacent
         for (Vertex<E> k: matrix.keySet()) {
@@ -90,7 +105,16 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
     @Override
     public Edge<E, V> addEdge(Vertex<E> from, Vertex<E> to, V weight) {
         Edge<E, V> e = new Edge<>(from, to, weight);
-        if (matrix.get(from) != null) {
+        if (matrix.get(from) != null) { // safe from possible exception
+            matrix.get(from).put(to, e);
+        }
+
+        return e;
+    }
+
+    public Edge<E, V> addEdge(Vertex<E> from, Vertex<E> to, V weight, V bandwidth) {
+        Edge<E, V> e = new Edge<>(from, to, weight, bandwidth);
+        if (matrix.get(from) != null) { // safe from possible exception
             matrix.get(from).put(to, e);
         }
 
@@ -99,7 +123,7 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
 
     @Override
     public Edge<E, V> removeEdge(Edge<E, V> e) {
-        if (matrix.get(e.from) != null) {
+        if (matrix.get(e.from) != null) { // safe from possible exception
             matrix.get(e.from).remove(e.to);
         }
 
@@ -132,15 +156,7 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
 
     @Override
     public Vertex<E> findVertex(E value) {
-        Vertex<E> ret = null;
-
-        for (Vertex<E> k: matrix.keySet()) {
-            if (value.equals(k.name)) {
-                ret = k;
-            }
-        }
-
-        return ret;
+        return findVertexMap.get(value);
     }
 
     @Override
@@ -156,6 +172,9 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
         return matrix.get(u) != null && matrix.get(u).containsKey(v);
     }
 
+    // Try to use DFS for it
+    // Take vertex, visit all the possible in connected component
+    // If there is the same met twice when there is a cycle
     public ArrayList<Edge<E, V>> isAcyclic() {
         // to observe the color of vertex
         // 0 - not visited
@@ -174,17 +193,19 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
             if (DFS(k)) break;
         }
 
+        // restore the cycle
         if (cycle_start != null) {
             cycle_path.add(cycle_start);
             Vertex<E> v = cycle_end;
             while (v != cycle_start) {
                 cycle_path.add(v);
-                v = parents.get(v);
+                v = parents.get(v); // like predecessors array, but actually hashmap, because it more comfortable
             }
             cycle_path.add(cycle_start);
 
-            Collections.reverse(cycle_path);
+            Collections.reverse(cycle_path); // because we added it from the end
 
+            // make an array list of edges using the vertices we got
             ArrayList<Edge<E, V>> ret = new ArrayList<>();
             for (int i = 0; i < cycle_path.size() - 1; ++i) {
                 ret.add(matrix.get(cycle_path.get(i)).get(cycle_path.get(i + 1)));
@@ -194,6 +215,7 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
         else return null;
     }
 
+    // pretty simple standard DFS
     private boolean DFS(Vertex<E> start) {
         colors.put(start, 1);
 
@@ -214,6 +236,11 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
         return false;
     }
 
+    /**
+     * Make a new HashMap to fill;
+     * Just iterate for every vertex (to consider all the edges)
+     * Swap target and source in edges
+     */
     public void transpose() {
         HashMap<Vertex<E>, HashMap<Vertex<E>, Edge<E, V>>> ret = new HashMap<>();
 
@@ -235,11 +262,117 @@ class AdjacencyMatrixGraph<E, V> implements Graph<E, V> {
     }
 }
 
+// special declared class for task 3
+class ShortestPath {
+    // since we know the conditions
+    // we can use non-template types
+    public AdjacencyMatrixGraph<String, Integer> graph;
+
+    public ShortestPath() {
+        graph = new AdjacencyMatrixGraph<>();
+    }
+
+    /**
+     * To find the shortest path from the source to the target
+     * we use Dijkstra algorithm.
+     * Consider start vertex, all the adjacent, choosing the minimal weight with
+     * Making relaxing, mark vertex as considered
+     */
+    public void shortestPath(Vertex<String> start, Vertex<String> finish, int bandWidth) {
+        HashMap<Vertex<String>, Integer> dist = new HashMap<>();
+        HashMap<Vertex<String>, Vertex<String>> prev = new HashMap<>();
+        HashMap<Vertex<String>, Boolean> used = new HashMap<>(); // instead of PriorityQueue
+        // priority queue actually harder to use than one more hashmap
+
+        for (Vertex<String> k: graph.matrix.keySet()) {
+            dist.put(k, Integer.MAX_VALUE);
+            prev.put(k, null);
+            used.put(k, false);
+        }
+        dist.put(start, 0);
+
+        for (int i = 0; i < graph.matrix.size(); ++i) {
+            Vertex<String> minVertex = null;
+            for (Vertex<String> v: graph.matrix.keySet()) {
+                if (!used.get(v) && (minVertex == null || dist.get(v) < dist.get(minVertex))) {
+                    minVertex = v;
+                }
+            }
+            if (dist.get(minVertex) == Integer.MAX_VALUE) break;
+            used.put(minVertex, true);
+
+            for (Vertex<String> k: graph.matrix.get(minVertex).keySet()) {
+                int weight = graph.matrix.get(minVertex).get(k).weight;
+                int bandwidth = graph.matrix.get(minVertex).get(k).bandwidth;
+                if (!dist.get(minVertex).equals(Integer.MAX_VALUE) &&
+                        bandwidth >= bandWidth && // bandwidth from the condition
+                        dist.get(minVertex) + weight < dist.get(k)) {
+                    dist.put(k, dist.get(minVertex) + weight);
+                    prev.put(k, minVertex);
+                }
+            }
+        }
+
+        if (dist.get(finish).equals(Integer.MAX_VALUE)) {
+            System.out.println("IMPOSSIBLE");
+        }
+        else {
+            int retBandwidth = Integer.MAX_VALUE;
+            int retDist = 0;
+            int retPrevCount = 1;
+            Vertex<String> son = finish;
+            Vertex<String> father = prev.get(son); // iterate for predecessors
+            ArrayList<Vertex<String>> path = new ArrayList<>();
+            path.add(son);
+            while (father != null) {
+                path.add(father);
+                retPrevCount += 1;
+                retDist += graph.matrix.get(father).get(son).weight;
+                retBandwidth = Math.min(graph.matrix.get(father).get(son).bandwidth, retBandwidth);
+                son = father;
+                father = prev.get(son);
+            }
+            System.out.println(retPrevCount + " " + retDist + " " + retBandwidth);
+            Collections.reverse(path); // cause we started from the end
+            for (Vertex<String> v : path) {
+                System.out.print(v.name + " ");
+            }
+        }
+    }
+}
+
 class UserInput {
     public AdjacencyMatrixGraph<String, Integer> graph;
+    public ShortestPath shortestPath;
 
     public UserInput() {
         graph = new AdjacencyMatrixGraph<>();
+        shortestPath = new ShortestPath();
+    }
+
+    public void shortestPath() throws FileNotFoundException {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt(), M = scanner.nextInt();
+        for (int i = 1; i <= N; ++i) {
+            shortestPath.graph.addVertex(Integer.toString(i));
+        }
+
+        for (int i = 0; i < M; ++i) {
+            int source = scanner.nextInt();
+            int target = scanner.nextInt();
+            int weight = scanner.nextInt();
+            int bandwidth = scanner.nextInt();
+            Vertex<String> sv = shortestPath.graph.findVertex(Integer.toString(source));
+            Vertex<String> tv = shortestPath.graph.findVertex(Integer.toString(target));
+            shortestPath.graph.addEdge(sv, tv, weight, bandwidth);
+        }
+        int start_s = scanner.nextInt();
+        int finish_s = scanner.nextInt();
+        int W = scanner.nextInt();
+        Vertex<String> start = shortestPath.graph.findVertex(Integer.toString(start_s));
+        Vertex<String> finish = shortestPath.graph.findVertex(Integer.toString(finish_s));
+
+        shortestPath.shortestPath(start, finish, W);
     }
 
     public void startLoop() {
